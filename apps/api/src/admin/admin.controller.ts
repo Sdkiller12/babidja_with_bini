@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Delete, UseGuards } from '@nestjs/common';
 import { UserRole } from '@prisma/client';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -33,8 +33,23 @@ export class AdminController {
     return this.adminService.updateTenant(id, dto);
   }
 
+  @Delete('tenants/:id')
+  deleteTenant(@Param('id') id: string) {
+    return this.adminService.deleteTenant(id);
+  }
+
   @Get('transactions')
   listTransactions() {
     return this.adminService.listTransactions();
+  }
+
+  @Get('tenant-requests')
+  listTenantRequests() {
+    return this.adminService.listTenantRequests();
+  }
+
+  @Patch('tenant-requests/:id')
+  processTenantRequest(@Param('id') id: string, @Body('status') status: 'APPROVED' | 'REJECTED') {
+    return this.adminService.processTenantRequest(id, status);
   }
 }

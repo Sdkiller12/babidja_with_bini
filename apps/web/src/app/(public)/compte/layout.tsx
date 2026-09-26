@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { CircleUser, House, User, CalendarDays, CreditCard, Bell, MessageSquare } from 'lucide-react'
+import { CircleUser, House, User, CalendarDays, CreditCard, Bell, MessageSquare, Gift } from 'lucide-react'
 import { useAuthStore } from '@/store/useAuthStore'
 
 const items = [
@@ -13,6 +13,7 @@ const items = [
   { href: '/compte/informations', icon: User, label: 'Mes informations' },
   { href: '/compte/reservations', icon: CalendarDays, label: 'Mes réservations' },
   { href: '/compte/paiement', icon: CreditCard, label: 'Moyens de paiement' },
+  { href: '/compte/parrainage', icon: Gift, label: 'Parrainage' },
   { href: '/compte/messagerie', icon: MessageSquare, label: 'Messagerie' },
   { href: '/compte/notifications', icon: Bell, label: 'Notifications' },
 ]
@@ -75,7 +76,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   ]
 
   return (
-    <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6 sm:px-6">
+    <div className="mx-auto flex w-full min-w-0 max-w-7xl gap-6 px-4 py-6 sm:px-6">
       <aside className="hidden w-60 shrink-0 md:block">
         <nav className="flex flex-col gap-1 rounded-2xl bg-white p-3 shadow-sm">
           {items.map((item, i) => {
@@ -85,35 +86,35 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
               <Link
                 key={i}
                 href={item.href}
-                className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+                className={`flex min-w-0 items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive ? 'bg-pastel text-secondary' : 'hover:bg-gray-50'
                 }`}
               >
-                <item.icon className="size-4.5" />
-                {item.label}
+                <item.icon className="size-5 shrink-0" />
+                <span className="truncate">{item.label}</span>
               </Link>
             )
           })}
         </nav>
       </aside>
-      <main className="min-w-0 flex-1 pb-24 md:pb-0">
+      <main className="min-w-0 w-full flex-1 overflow-x-clip pb-28 md:pb-0">
         {children}
       </main>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-gray-100 bg-white px-2 pb-safe pt-2 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around gap-1 border-t border-gray-100 bg-white px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.1)] md:hidden">
         {mobileItems.map((item, i) => {
           const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href)
           return (
             <Link
               key={i}
               href={item.href}
-              className={`flex flex-col items-center gap-1.5 rounded-xl px-3 py-2 text-[10px] font-medium transition-colors ${
+              className={`flex min-h-[48px] min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[10px] font-medium transition-colors ${
                 isActive ? 'text-secondary' : 'text-gray-500 hover:text-gray-900'
               }`}
             >
-              <item.icon className={`size-5 ${isActive ? 'fill-secondary/10' : ''}`} />
-              <span className="truncate">{item.label}</span>
+              <item.icon className={`size-5 shrink-0 ${isActive ? 'fill-secondary/10' : ''}`} />
+              <span className="max-w-full truncate">{item.label}</span>
             </Link>
           )
         })}

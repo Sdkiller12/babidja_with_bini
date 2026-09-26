@@ -31,7 +31,7 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang="fr" className={`${poppins.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans text-gray-900 bg-[#f6f6f4]">
+      <body className="flex min-h-dvh w-full min-w-0 flex-col overflow-x-clip font-sans text-gray-900 bg-[#f6f6f4]">
         <NextIntlClientProvider messages={messages}>
         <QueryProvider>
           {children}

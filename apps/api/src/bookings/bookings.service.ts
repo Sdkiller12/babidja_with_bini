@@ -6,6 +6,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { getDateRange } from '../common/date-range';
 import { ReferralService } from '../referral/referral.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
+import { CommissionsService } from '../commissions/commissions.service';
 
 interface BookableResource {
   tenantId: string;
@@ -18,6 +19,7 @@ export class BookingsService {
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly referralService: ReferralService,
+    private readonly commissionsService: CommissionsService,
   ) {}
 
   /**
@@ -126,15 +128,26 @@ export class BookingsService {
     return booking;
   }
 
-  async findUserBookings(userId: string, status?: BookingStatus) {
-    return this.prisma.booking.findMany({
-      where: { userId, ...(status ? { status } : {}) },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        review: true,
-        tenant: true,
-      },
-    });
+  async findUserBookings(userId: string, status?: BookingStatus, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.booking.findMany({
+        where: { userId, ...(status ? { status } : {}) },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        include: {
+          review: true,
+          tenant: true,
+        },
+      }),
+      this.prisma.booking.count({ where: { userId, ...(status ? { status } : {}) } })
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, lastPage: Math.ceil(total / limit) },
+    };
   }
 
   /**
@@ -193,11 +206,17 @@ export class BookingsService {
     const booking = await this.prisma.booking.update({
       where: { id: bookingId },
       data: { status: 'CONFIRMED' },
-      include: { user: true },
+      include: { user: true, tenant: true },
     });
     // Le crédit de parrainage se déclenche à la première réservation CONFIRMED du
     // filleul ; creditReward() est lui-même idempotent (garde rewardStatus=PENDING).
     await this.referralService.creditReward(booking.userId);
+    
+    // Calcul et enregistrement de la commission (si partenaire)
+    if (!booking.tenant.isPlatformOwned) {
+      await this.commissionsService.calculateAndRecord(booking.id);
+    }
+
     return booking;
   }
 
@@ -243,6 +262,11 @@ export class BookingsService {
       const room = await this.prisma.room.findFirst({ where: { id: resourceId, isActive: true } });
       if (!room) throw new NotFoundException('Chambre introuvable.');
       return { tenantId: room.tenantId, price: room.basePrice };
+    }
+    if (resourceType === ResourceType.TABLE) {
+      const table = await this.prisma.table.findFirst({ where: { id: resourceId, isActive: true } });
+      if (!table) throw new NotFoundException('Table introuvable.');
+      return { tenantId: table.tenantId, price: table.basePrice };
     }
     const vehicle = await this.prisma.vehicle.findFirst({ where: { id: resourceId, isActive: true } });
     if (!vehicle) throw new NotFoundException('Véhicule introuvable.');

@@ -35,8 +35,9 @@ describe('BookingsService — createBooking', () => {
       ]),
       $transaction: jest.fn().mockImplementation((cb: any) => cb(fakePrisma)),
     };
+    const fakeCommissionsService = { calculateAndRecord: jest.fn().mockResolvedValue(undefined) } as any;
 
-    service = new BookingsService(fakePrisma, fakeConfig, fakeReferralService);
+    service = new BookingsService(fakePrisma, fakeConfig, fakeReferralService, fakeCommissionsService);
   });
 
   const baseDto = {

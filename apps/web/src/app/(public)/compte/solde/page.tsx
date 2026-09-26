@@ -19,14 +19,16 @@ export default function Solde() {
   const [amount, setAmount] = useState<number | null>(null);
   const [custom, setCustom] = useState('');
 
-  const { data: bookings = [] } = useQuery<Booking[]>({
+  const { data: bookingsData } = useQuery({
     queryKey: ['my-bookings'],
-    queryFn: fetchMyBookings,
+    queryFn: () => fetchMyBookings(),
     enabled: showHistory,
   });
 
+  const bookings = bookingsData?.data || [];
+
   // Historique = réservations payées (CONFIRMED ou COMPLETED)
-  const paidBookings = (bookings as Booking[]).filter(
+  const paidBookings = bookings.filter(
     (b) => b.status === 'CONFIRMED' || b.status === 'COMPLETED',
   );
 

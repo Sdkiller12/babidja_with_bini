@@ -16,12 +16,36 @@ html {
   color: var(--color-ink);
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5rem;
 }
 
 body {
   margin: 0;
   background-color: #f6f6f4;
   text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  min-height: 100dvh;
+}
+
+/* Garde-fous responsive globaux : jamais de scroll horizontal involontaire,
+   médias fluides, interactions tactiles propres.
+   NOTE : pas de `height:auto` global sur img — ça casserait Next/Image
+   (les classes h-*/w-* Tailwind sont en @layer, donc perdent face à du CSS non-layered). */
+img,
+video {
+  max-width: 100%;
+}
+:where(a, button, [role="button"], input, select, textarea) {
+  touch-action: manipulation;
+}
+/* Évite le zoom auto iOS sur les champs (<16px) sans changer le design desktop */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
 }
 
 ::selection {

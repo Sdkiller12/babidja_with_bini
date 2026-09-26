@@ -10,6 +10,11 @@ import { CreateMessageDto } from './dto/create-message.dto';
 export class MessagingController {
   constructor(private readonly messagingService: MessagingService) {}
 
+  @Get('threads')
+  getThreads(@CurrentUser() user: AuthenticatedUser) {
+    return this.messagingService.getThreads(user.userId, user.tenantId);
+  }
+
   @Get(':bookingId')
   findByBooking(@Param('bookingId') bookingId: string, @CurrentUser() user: AuthenticatedUser) {
     return this.messagingService.findByBooking(bookingId, user.userId, user.tenantId);

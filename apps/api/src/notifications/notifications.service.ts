@@ -45,4 +45,8 @@ export class NotificationsService {
       body: 'Votre récompense de parrainage a été créditée.',
     });
   }
+
+  async sendPartnerAccountCreatedSms(phone: string): Promise<void> {
+    await this.queue.add('partner-account-created-sms', { kind: 'partner-account-created-sms', phone });
+  }
 }

@@ -3,9 +3,9 @@ import Footer from '@/components/layout/Footer'
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh w-full min-w-0 flex-col overflow-x-clip">
       <NavbarPublic />
-      <main className="flex-1 pb-24 lg:pb-0">
+      <main className="w-full min-w-0 flex-1 pb-28 sm:pb-24 lg:pb-0">
         {children}
       </main>
       <Footer />

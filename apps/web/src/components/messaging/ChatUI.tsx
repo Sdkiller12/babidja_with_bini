@@ -113,14 +113,14 @@ export default function ChatUI({ role, bookingId, chatName }: ChatUIProps) {
 
   if (!bookingId) {
     return (
-      <div className="flex h-[600px] flex-col rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden items-center justify-center">
+      <div className="flex h-[60dvh] min-h-[20rem] w-full min-w-0 flex-col rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden items-center justify-center p-6 text-center">
         <p className="text-gray-500">Sélectionnez une conversation pour commencer</p>
       </div>
     )
   }
 
   return (
-    <div className="flex h-[600px] flex-col rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden">
+    <div className="flex h-[70dvh] max-h-[37.5rem] min-h-[26rem] w-full min-w-0 flex-col rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-100 p-4">
         <div className="flex items-center gap-4">
@@ -138,15 +138,15 @@ export default function ChatUI({ role, bookingId, chatName }: ChatUIProps) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
+      <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 space-y-4 bg-gray-50/50">
         {messages.map((msg) => {
           // If we are 'pro', our messages have senderType 'TENANT'
           // If we are 'client', our messages have senderType 'CUSTOMER'
           const isMe = role === 'pro' ? msg.senderType === 'TENANT' : msg.senderType === 'CUSTOMER'
           
           return (
-            <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[75%] rounded-2xl p-4 ${isMe ? 'bg-secondary text-white rounded-br-none' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-none shadow-sm'}`}>
+            <div key={msg.id} className={`flex min-w-0 ${isMe ? 'justify-end' : 'justify-start'}`}>
+              <div className={`max-w-[85%] sm:max-w-[75%] min-w-0 rounded-2xl p-3 sm:p-4 break-words ${isMe ? 'bg-secondary text-white rounded-br-none' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-none shadow-sm'}`}>
                 <p className="text-sm">{msg.content}</p>
                 <p className={`mt-1 text-xs text-right ${isMe ? 'text-white/80' : 'text-gray-400'}`}>
                   {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -167,17 +167,17 @@ export default function ChatUI({ role, bookingId, chatName }: ChatUIProps) {
       </div>
 
       {/* Input */}
-      <div className="border-t border-gray-100 p-4 bg-white flex gap-3">
+      <div className="border-t border-gray-100 p-3 sm:p-4 bg-white flex min-w-0 gap-2 sm:gap-3">
         <input 
           type="text" 
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           placeholder="Écrivez votre message..."
-          className="flex-1 rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-secondary disabled:bg-gray-100"
+          className="flex-1 min-w-0 rounded-xl border border-gray-200 px-4 py-3 text-base sm:text-sm outline-none focus:border-secondary disabled:bg-gray-100"
           disabled={!isConnected}
         />
-        <Button onClick={handleSend} className="px-5 rounded-xl" disabled={!isConnected || !inputValue.trim()}>
+        <Button onClick={handleSend} className="min-h-[44px] shrink-0 px-4 sm:px-5 rounded-xl" disabled={!isConnected || !inputValue.trim()}>
           <Send className="size-5" />
         </Button>
       </div>

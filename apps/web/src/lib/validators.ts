@@ -19,3 +19,13 @@ export const registerSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+
+export const employeeSchema = z.object({
+  firstName: z.string().min(2, 'Le prénom est requis'),
+  lastName: z.string().min(2, 'Le nom est requis'),
+  phone: z.string().min(8, 'Le numéro de téléphone est invalide'),
+  email: z.union([z.literal(''), z.string().email('Adresse e-mail invalide')]).optional(),
+  role: z.enum(['TENANT_EMPLOYEE', 'TENANT_ADMIN']),
+});
+
+export type EmployeeFormData = z.infer<typeof employeeSchema>;

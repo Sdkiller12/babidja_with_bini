@@ -44,31 +44,33 @@ export default function ProReservations({ type = 'hotel' }: { type?: 'hotel' | '
     <div>
       <h1 className="text-xl font-bold">Réservations — Liste</h1>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <div className="relative min-w-64 flex-1">
+      <div className="mt-4 flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="relative w-full min-w-0 flex-1 sm:min-w-60">
           <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher par nom de client"
-            className="w-full rounded-full border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm outline-none focus:border-secondary"
+            className="w-full min-w-0 rounded-full border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-base sm:text-sm outline-none focus:border-secondary"
           />
         </div>
+        <div className="flex min-w-0 gap-2 overflow-x-auto pb-1">
         {filters.map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+            className={`min-h-[44px] shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
               filter === f ? 'bg-orange-100 text-primary-dark' : 'bg-white text-gray-600 hover:bg-gray-100'
             }`}
           >
             {f}
           </button>
         ))}
+        </div>
       </div>
 
-      <section className="mt-4 overflow-x-auto rounded-2xl bg-white p-5 shadow-sm">
-        <table className="w-full min-w-2xl text-left text-sm">
+      <section className="mt-4 min-w-0 overflow-x-auto rounded-2xl bg-white p-3 sm:p-5 shadow-sm">
+        <table className="w-full min-w-[42rem] whitespace-nowrap text-left text-sm">
           <thead>
             <tr className="border-b border-gray-100 text-gray-500">
               <th className="py-2 font-semibold">Client</th>

@@ -8,6 +8,7 @@ export default defineConfig({
       target: 'src/lib/api/generated',
       schemas: 'src/lib/api/generated/model',
       client: 'react-query',
+      httpClient: 'axios',
       mock: false,
       override: {
         mutator: {

@@ -73,8 +73,15 @@ export class UsersController {
   }
 
   @Get('bookings')
-  myBookings(@CurrentUser() user: AuthenticatedUser, @Query('status') status?: BookingStatus) {
-    return this.bookingsService.findUserBookings(user.userId, status);
+  myBookings(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query('status') status?: BookingStatus,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 10;
+    return this.bookingsService.findUserBookings(user.userId, status, pageNum, limitNum);
   }
 
   @Get('wallet')

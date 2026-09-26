@@ -1,28 +1,13 @@
-"use client"
+import Messenger from '@/components/Messenger';
 
-import { useState } from 'react'
-import ChatUI from '@/components/messaging/ChatUI'
-import ClientConversationsSidebar from '@/components/messaging/ClientConversationsSidebar'
-
-export default function ClientMessagingPage() {
-  const [selectedBooking, setSelectedBooking] = useState<{ id: string; name: string } | null>(null)
-
+export default function CustomerMessagingPage() {
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-extrabold text-secondary mb-6">Messagerie</h1>
-      <div className="flex gap-6">
-        <ClientConversationsSidebar
-          selectedBookingId={selectedBooking?.id}
-          onSelectBooking={(id, name) => setSelectedBooking({ id, name })}
-        />
-        <div className="flex-1">
-          <ChatUI
-            role="client"
-            bookingId={selectedBooking?.id || ''}
-            chatName={selectedBooking?.name || 'Sélectionnez une conversation'}
-          />
-        </div>
+    <div>
+      <div className="mb-6">
+        <h1 className="text-xl font-bold">Messages</h1>
+        <p className="text-sm text-gray-500 mt-1">Contactez directement les gérants pour vos réservations.</p>
       </div>
+      <Messenger isPro={false} />
     </div>
-  )
+  );
 }

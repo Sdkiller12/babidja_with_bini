@@ -41,13 +41,13 @@ export default function AdminMessagerie() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-140px)] gap-6">
+    <div className="flex min-h-[26rem] w-full min-w-0 flex-col gap-4 md:h-[calc(100dvh-12rem)] md:max-h-[50rem] md:flex-row md:gap-6">
       {/* Liste des conversations */}
-      <div className="w-1/3 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-y-auto flex flex-col">
-        <div className="p-4 border-b border-gray-100 bg-gray-50/50 sticky top-0">
+      <div className="flex max-h-[16rem] w-full min-w-0 flex-col overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-sm md:max-h-none md:h-auto md:w-1/3 md:max-w-xs md:shrink-0">
+        <div className="sticky top-0 border-b border-gray-100 bg-gray-50/50 p-4">
           <h2 className="font-extrabold text-lg text-gray-900">Conversations</h2>
         </div>
-        <div className="flex-1 p-2">
+        <div className="min-h-0 flex-1 p-2">
           {conversations.length === 0 ? (
             <p className="text-gray-500 text-sm text-center mt-4">Aucune conversation.</p>
           ) : (
@@ -79,7 +79,7 @@ export default function AdminMessagerie() {
       </div>
 
       {/* Fenêtre de Chat */}
-      <div className="flex-1 h-full">
+      <div className="min-h-[26rem] w-full min-w-0 flex-1">
         {selectedBooking ? (
           <ChatUI 
             role="pro" 
@@ -87,7 +87,7 @@ export default function AdminMessagerie() {
             chatName={`Discussion - ${selectedBooking.customerName}`} 
           />
         ) : (
-          <div className="flex h-full flex-col rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden items-center justify-center text-gray-400">
+          <div className="flex h-full min-h-[16rem] flex-col rounded-3xl border border-gray-100 bg-white shadow-sm overflow-hidden items-center justify-center p-6 text-center text-gray-400">
             <MessageSquare className="size-12 mb-3 opacity-20" />
             <p>Sélectionnez une conversation pour commencer</p>
           </div>

@@ -66,11 +66,11 @@ export default function BookingConfirmation() {
       <p className="mt-1 text-center font-semibold">Réservation validée !</p>
 
       {/* Coche verte + décor */}
-      <div className="relative mx-auto mt-6 w-fit" aria-hidden="true">
-        <TreePalm className="absolute -left-20 -top-2 size-14 text-secondary/70" />
-        <Sun className="absolute -right-20 -top-4 size-12 text-primary" />
-        <span className="grid size-24 place-items-center rounded-full bg-secondary shadow-lg">
-          <Check className="size-14 text-white" strokeWidth={3.5} />
+      <div className="relative mx-auto mt-6 w-fit max-w-full" aria-hidden="true">
+        <TreePalm className="absolute -left-12 sm:-left-20 -top-2 size-10 sm:size-14 text-secondary/70" />
+        <Sun className="absolute -right-12 sm:-right-20 -top-4 size-9 sm:size-12 text-primary" />
+        <span className="grid size-20 sm:size-24 place-items-center rounded-full bg-secondary shadow-lg">
+          <Check className="size-12 sm:size-14 text-white" strokeWidth={3.5} />
         </span>
       </div>
 
@@ -85,18 +85,18 @@ export default function BookingConfirmation() {
       )}
 
       {/* Récapitulatif */}
-      <div className="mt-5 flex gap-3 rounded-2xl border border-gray-200 p-3">
+      <div className="mt-5 flex min-w-0 gap-3 rounded-2xl border border-gray-200 p-3">
         <Placeholder kind={itemType === 'car' ? 'car' : 'room'} className="h-24 w-24 shrink-0 rounded-xl" />
-        <div className="text-sm">
-          <p className="font-bold">{title}</p>
-          <p className="mt-1 flex items-center gap-1.5 text-gray-600">
-            <MapPin className="size-3.5 text-secondary" /> {location}
+        <div className="min-w-0 flex-1 text-sm">
+          <p className="truncate font-bold">{title}</p>
+          <p className="mt-1 flex min-w-0 items-center gap-1.5 text-gray-600">
+            <MapPin className="size-3.5 shrink-0 text-secondary" /> <span className="truncate">{location}</span>
           </p>
           <p className="flex items-center gap-1.5 text-gray-600">
-            <CalendarDays className="size-3.5 text-secondary" /> {startStr} – {endStr}
+            <CalendarDays className="size-3.5 shrink-0 text-secondary" /> <span className="truncate">{startStr} – {endStr}</span>
           </p>
           <p className="flex items-center gap-1.5 text-gray-600">
-            <Users className="size-3.5 text-secondary" /> {details}
+            <Users className="size-3.5 shrink-0 text-secondary" /> {details}
           </p>
           <p className="mt-1 font-bold text-primary">Total : {fcfa(Number(booking.totalAmount))}</p>
         </div>

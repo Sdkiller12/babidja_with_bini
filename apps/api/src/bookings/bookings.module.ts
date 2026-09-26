@@ -5,12 +5,13 @@ import { ReferralModule } from '../referral/referral.module';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CreateBookingHandler } from './commands/handlers/create-booking.handler';
 import { GetUserBookingsHandler } from './queries/handlers/get-user-bookings.handler';
+import { CommissionsModule } from '../commissions/commissions.module';
 
 const CommandHandlers = [CreateBookingHandler];
 const QueryHandlers = [GetUserBookingsHandler];
 
 @Module({
-  imports: [ReferralModule, CqrsModule],
+  imports: [ReferralModule, CqrsModule, CommissionsModule],
   controllers: [BookingsController],
   providers: [BookingsService, ...CommandHandlers, ...QueryHandlers],
   exports: [BookingsService],

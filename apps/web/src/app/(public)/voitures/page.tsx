@@ -1,17 +1,19 @@
 import VoituresClient from './VoituresClient'
 import type { Vehicle } from '@/types/catalog'
 
-function mapVehicle(dto: any): Vehicle {
+function mapVehicle(dto: Record<string, unknown>): Vehicle {
   return {
-    id: dto.id,
+    id: dto.id as string,
     name: `${dto.brand} ${dto.model}`,
-    description: dto.description ?? '',
+    description: (dto.description as string) ?? '',
     price: Number(dto.pricePerDay),
-    transmission: dto.transmission,
+    transmission: dto.transmission as string,
     kind: 'car',
-    images: dto.images,
+    images: dto.images as string[],
   };
 }
+
+import { cars as mockCars } from '@/data/mock';
 
 async function fetchCarsSSR(): Promise<Vehicle[]> {
   try {
@@ -19,13 +21,14 @@ async function fetchCarsSSR(): Promise<Vehicle[]> {
     
     // fetch vehicles
     const vehiclesRes = await fetch(`${apiUrl}/vehicles`, { next: { revalidate: 60 } });
-    if (!vehiclesRes.ok) return [];
+    if (!vehiclesRes.ok) return mockCars;
     
     const vehiclesPage = await vehiclesRes.json();
-    return ((vehiclesPage.data ?? []) as any[]).map(mapVehicle);
+    const cars = ((vehiclesPage.data ?? []) as Record<string, unknown>[]).map(mapVehicle);
+    return cars.length > 0 ? cars : mockCars;
   } catch (error) {
     console.error("Failed to fetch cars for SSR", error);
-    return [];
+    return mockCars;
   }
 }
 

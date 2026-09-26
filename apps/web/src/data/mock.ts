@@ -29,6 +29,7 @@ export const rooms: Room[] = [
     size: 25,
     kind: 'room',
     amenities: ['Wi-Fi', 'Climatisation', 'TV Écran Plat', 'Coffre-fort'],
+    images: ['https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1470&auto=format&fit=crop'],
   },
   {
     id: 'superieure',
@@ -40,6 +41,7 @@ export const rooms: Room[] = [
     size: 35,
     kind: 'room',
     amenities: ['Wi-Fi', 'Climatisation', 'Mini-bar', 'Vue Piscine'],
+    images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1470&auto=format&fit=crop'],
   },
   {
     id: 'suite-junior',
@@ -51,6 +53,7 @@ export const rooms: Room[] = [
     size: 50,
     kind: 'room',
     amenities: ['Wi-Fi', 'Salon séparé', 'Baignoire', 'Balcon privé', 'Accès Spa'],
+    images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1470&auto=format&fit=crop'],
   },
   {
     id: 'suite-signature',
@@ -62,6 +65,7 @@ export const rooms: Room[] = [
     size: 80,
     kind: 'pool',
     amenities: ['Jacuzzi privé', 'Service en chambre 24/7', 'Vue panoramique', 'Transfert aéroport inclus'],
+    images: ['https://images.unsplash.com/photo-1578683010236-d716f9a3f461?q=80&w=1470&auto=format&fit=crop'],
   },
 ]
 
@@ -73,6 +77,7 @@ export const cars: Vehicle[] = [
     price: 45000,
     transmission: 'Automatique',
     kind: 'car',
+    images: ['https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=1470&auto=format&fit=crop'],
   },
   {
     id: 'berline-toyota-corolla',
@@ -81,6 +86,7 @@ export const cars: Vehicle[] = [
     price: 35000,
     transmission: 'Automatique',
     kind: 'car',
+    images: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=1470&auto=format&fit=crop'],
   },
   {
     id: 'citadine-renault-clio',
@@ -89,6 +95,7 @@ export const cars: Vehicle[] = [
     price: 25000,
     transmission: 'Manuelle',
     kind: 'car',
+    images: ['https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?q=80&w=1470&auto=format&fit=crop'],
   },
   {
     id: '4x4-toyota-prado',
@@ -97,8 +104,56 @@ export const cars: Vehicle[] = [
     price: 80000,
     transmission: 'Automatique',
     kind: 'car',
+    images: ['https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1470&auto=format&fit=crop'],
   },
 ]
+
+export const mockRestaurants = [
+  {
+    id: 'rest-1',
+    cuisineType: ['Gastronomie', 'Poisson'],
+    priceRange: '30 000 - 60 000 FCFA',
+    tenant: {
+      name: 'Le Grand Large - Hôtel Ivoire',
+      address: 'Cocody, Abidjan',
+      city: 'Abidjan',
+      coverImageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1470&auto=format&fit=crop',
+    },
+  },
+  {
+    id: 'rest-2',
+    cuisineType: ['Africaine Raffinée'],
+    priceRange: '20 000 - 45 000 FCFA',
+    tenant: {
+      name: 'Saakan Restaurant',
+      address: 'Le Plateau, Abidjan',
+      city: 'Abidjan',
+      coverImageUrl: 'https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?q=80&w=1470&auto=format&fit=crop',
+    },
+  },
+  {
+    id: 'rest-3',
+    cuisineType: ['Spécialités Ivoiriennes'],
+    priceRange: '15 000 - 35 000 FCFA',
+    tenant: {
+      name: 'La Chaumière',
+      address: 'Zone 4, Marcory',
+      city: 'Abidjan',
+      coverImageUrl: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1470&auto=format&fit=crop',
+    },
+  },
+  {
+    id: 'rest-4',
+    cuisineType: ['Fusion & Lounge'],
+    priceRange: '25 000 - 50 000 FCFA',
+    tenant: {
+      name: 'Villa K Restaurant',
+      address: 'Deux Plateaux, Cocody',
+      city: 'Abidjan',
+      coverImageUrl: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1470&auto=format&fit=crop',
+    },
+  },
+];
 
 export const booking = {
   hotel: "L'Hôtel Babydja",

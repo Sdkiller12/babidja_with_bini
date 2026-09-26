@@ -5,6 +5,24 @@ import { PrismaService } from '../prisma/prisma.service';
 export class MessagingService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getThreads(userId: string, tenantId?: string) {
+    if (tenantId) {
+      // For pros: get bookings for their tenant
+      return this.prisma.booking.findMany({
+        where: { tenantId },
+        include: { user: { select: { firstName: true, lastName: true, email: true, phone: true } }, messages: { orderBy: { createdAt: 'desc' }, take: 1 } },
+        orderBy: { createdAt: 'desc' },
+      });
+    } else {
+      // For customers: get their bookings
+      return this.prisma.booking.findMany({
+        where: { userId },
+        include: { tenant: { select: { name: true, type: true } }, messages: { orderBy: { createdAt: 'desc' }, take: 1 } },
+        orderBy: { createdAt: 'desc' },
+      });
+    }
+  }
+
   async findByBooking(bookingId: string, userId: string, tenantId?: string) {
     await this.assertAccess(bookingId, userId, tenantId);
     return this.prisma.message.findMany({ where: { bookingId }, orderBy: { createdAt: 'asc' } });

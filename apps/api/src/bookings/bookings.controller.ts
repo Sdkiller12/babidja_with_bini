@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { AuthenticatedUser } from '../auth/types/authenticated-user';
@@ -25,8 +25,14 @@ export class BookingsController {
   }
 
   @Get('my-bookings')
-  myBookings(@CurrentUser() user: AuthenticatedUser) {
-    return this.queryBus.execute(new GetUserBookingsQuery(user.userId));
+  myBookings(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 10;
+    return this.queryBus.execute(new GetUserBookingsQuery(user.userId, undefined, pageNum, limitNum));
   }
 
   @Get(':id')

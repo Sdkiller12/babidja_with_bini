@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/store/useAuthStore';
 
 const http = axios.create({
@@ -87,8 +87,6 @@ http.interceptors.response.use(
 
 export default http;
 
-import type { AxiosRequestConfig } from 'axios';
-
-export const customInstance = <T>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> => {
-  return http({ ...config, ...options }).then(({ data }) => data);
+export const customInstance = <T>(url: string, config: any): Promise<T> => {
+  return http({ url, ...config }).then(({ data }) => data);
 };

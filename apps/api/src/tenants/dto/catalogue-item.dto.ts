@@ -81,4 +81,10 @@ export class CatalogueItemDto {
   @IsOptional()
   @IsBoolean()
   hasAC?: boolean;
+
+  // Table (Restaurant)
+  @IsOptional()
+  @IsInt()
+  @Min(1)
+  capacity?: number;
 }

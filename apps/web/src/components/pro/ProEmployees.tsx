@@ -149,19 +149,19 @@ export default function ProEmployees({ type = 'hotel' }: { type?: 'hotel' | 'car
 
       {/* Modal d'ajout / modification */}
       {showModal && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4" onClick={() => setShowModal(false)}>
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h2 className="font-bold">{editingId ? 'Modifier l\'employé' : 'Ajouter un employé'}</h2>
-              <button aria-label="Fermer" onClick={() => setShowModal(false)} className="text-gray-400 hover:text-ink">
+        <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/40 p-4" onClick={() => setShowModal(false)}>
+          <div className="my-8 max-h-[90dvh] w-full min-w-0 max-w-md overflow-y-auto rounded-2xl bg-white p-5 sm:p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex min-w-0 items-center justify-between gap-3">
+              <h2 className="min-w-0 truncate font-bold">{editingId ? 'Modifier l\'employé' : 'Ajouter un employé'}</h2>
+              <button aria-label="Fermer" onClick={() => setShowModal(false)} className="grid size-9 min-h-[44px] min-w-[44px] shrink-0 place-items-center rounded-full text-gray-400 hover:text-ink">
                 <X className="size-5" />
               </button>
             </div>
             <form
-              className="mt-4 flex flex-col gap-3"
+              className="mt-4 flex min-w-0 flex-col gap-3"
               onSubmit={handleSubmit}
             >
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input 
                   placeholder="Nom" 
                   value={name}
@@ -179,7 +179,7 @@ export default function ProEmployees({ type = 'hotel' }: { type?: 'hotel' | 'car
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               />
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <Input 
                   placeholder="ID de connexion" 
                   value={loginId}

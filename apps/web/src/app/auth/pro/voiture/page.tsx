@@ -41,13 +41,13 @@ export default function CarLogin() {
   }
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-slate-50 px-4">
+    <div className="relative grid min-h-dvh w-full min-w-0 place-items-center overflow-x-clip bg-slate-50 px-4 py-8">
       {/* Décor Voiture */}
-      <Car className="absolute left-10 top-20 size-32 text-slate-200" aria-hidden="true" />
-      <Key className="absolute right-16 top-32 size-20 text-slate-200" aria-hidden="true" />
-      <MapPin className="absolute bottom-20 left-20 size-24 text-slate-200" aria-hidden="true" />
+      <Car className="absolute left-10 top-20 hidden size-32 text-slate-200 sm:block" aria-hidden="true" />
+      <Key className="absolute right-16 top-32 hidden size-20 text-slate-200 sm:block" aria-hidden="true" />
+      <MapPin className="absolute bottom-20 left-20 hidden size-24 text-slate-200 sm:block" aria-hidden="true" />
 
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-100 relative z-10">
+      <div className="w-full min-w-0 max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl ring-1 ring-gray-100 relative z-10">
         <div className="flex justify-center">
           <Logo variant="pro" />
         </div>

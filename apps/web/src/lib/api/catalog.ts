@@ -68,15 +68,55 @@ function mapVehicle(dto: VehicleDto): Vehicle {
 // location : on prend le premier tenant de chaque type plutôt que d'ajouter un
 // endpoint "toutes les chambres à plat" qui n'aurait de sens qu'à partir de
 // plusieurs hôtels.
+import { rooms as mockRooms, cars as mockCars, mockRestaurants } from '@/data/mock';
+
 export const fetchRooms = async (): Promise<Room[]> => {
-  const { data: hotelsPage } = await http.get('/hotels');
-  const firstHotel = hotelsPage.data?.[0];
-  if (!firstHotel) return [];
-  const { data: hotel } = await http.get(`/hotels/${firstHotel.id}`);
-  return ((hotel.rooms ?? []) as RoomDto[]).map(mapRoom);
+  try {
+    const { data: hotelsPage } = await http.get('/hotels');
+    const firstHotel = hotelsPage.data?.[0];
+    if (!firstHotel) return mockRooms;
+    const { data: hotel } = await http.get(`/hotels/${firstHotel.id}`);
+    const fetchedRooms = ((hotel.rooms ?? []) as RoomDto[]).map(mapRoom);
+    return fetchedRooms.length > 0 ? fetchedRooms : mockRooms;
+  } catch {
+    return mockRooms;
+  }
 };
 
 export const fetchCars = async (): Promise<Vehicle[]> => {
-  const { data: vehiclesPage } = await http.get('/vehicles');
-  return ((vehiclesPage.data ?? []) as VehicleDto[]).map(mapVehicle);
+  try {
+    const { data: vehiclesPage } = await http.get('/vehicles');
+    const fetchedCars = ((vehiclesPage.data ?? []) as VehicleDto[]).map(mapVehicle);
+    return fetchedCars.length > 0 ? fetchedCars : mockCars;
+  } catch {
+    return mockCars;
+  }
+};
+
+export const fetchRestaurants = async () => {
+  try {
+    const { data } = await http.get('/restaurants');
+    const list = Array.isArray(data) ? data : data?.data ?? [];
+    return list.length > 0 ? list : mockRestaurants;
+  } catch {
+    return mockRestaurants;
+  }
+};
+
+export const fetchRestaurant = async (id: string) => {
+  try {
+    const { data } = await http.get(`/restaurants/${id}`);
+    return data;
+  } catch {
+    return mockRestaurants.find((r) => r.id === id) || mockRestaurants[0];
+  }
+};
+
+export const fetchMenu = async (id: string) => {
+  try {
+    const { data } = await http.get(`/restaurants/${id}/menu`);
+    return data;
+  } catch {
+    return [];
+  }
 };

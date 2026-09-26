@@ -47,17 +47,17 @@ export default function ClientConversationsSidebar({ onSelectBooking, selectedBo
 
   if (bookings.length === 0) {
     return (
-      <div className="flex flex-col h-[600px] items-center justify-center gap-3 rounded-3xl border border-gray-100 bg-white p-8 text-center shadow-sm w-full max-w-sm">
+      <div className="flex h-[50dvh] max-h-[34rem] min-h-[18rem] sm:h-[600px] sm:max-h-[70dvh] w-full min-w-0 max-w-full sm:max-w-sm flex-col items-center justify-center gap-3 rounded-3xl border border-gray-100 bg-white p-6 sm:p-8 text-center shadow-sm">
         <span className="grid size-16 place-items-center rounded-2xl bg-gray-50">
           <Building2 className="size-8 text-gray-300" />
         </span>
         <p className="font-semibold text-gray-700">Aucune conversation</p>
-        <p className="text-sm text-gray-400 max-w-[200px]">
+        <p className="text-sm text-gray-400 max-w-[16rem]">
           Faites une réservation pour démarrer une conversation avec l&apos;établissement.
         </p>
         <a
           href="/chambres"
-          className="mt-2 rounded-full bg-secondary px-5 py-2 text-sm font-bold text-white hover:bg-secondary/90 transition-colors"
+          className="mt-2 inline-flex min-h-[44px] items-center rounded-full bg-secondary px-5 py-2 text-sm font-bold text-white hover:bg-secondary/90 transition-colors"
         >
           Voir les chambres
         </a>
@@ -66,7 +66,7 @@ export default function ClientConversationsSidebar({ onSelectBooking, selectedBo
   }
 
   return (
-    <div className="flex flex-col h-[600px] bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden w-full max-w-sm">
+    <div className="flex h-[50dvh] max-h-[34rem] min-h-[18rem] sm:h-[600px] sm:max-h-[70dvh] w-full min-w-0 max-w-full sm:max-w-sm flex-col bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-gray-100 bg-gray-50">
         <h2 className="font-bold text-gray-900">Conversations</h2>
         <p className="text-xs text-gray-500">Sélectionnez une réservation</p>

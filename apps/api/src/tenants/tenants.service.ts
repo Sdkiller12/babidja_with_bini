@@ -45,12 +45,23 @@ export class TenantsService {
     };
   }
 
-  listBookings(tenantId: string) {
-    return this.prisma.booking.findMany({
-      where: { tenantId },
-      orderBy: { createdAt: 'desc' },
-      include: { user: { select: { id: true, firstName: true, lastName: true, phone: true, email: true } } },
-    });
+  async listBookings(tenantId: string, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.booking.findMany({
+        where: { tenantId },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        include: { user: { select: { id: true, firstName: true, lastName: true, phone: true, email: true } } },
+      }),
+      this.prisma.booking.count({ where: { tenantId } })
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, lastPage: Math.ceil(total / limit) },
+    };
   }
 
   async updateBookingStatus(tenantId: string, bookingId: string, status: BookingStatus) {
@@ -86,11 +97,12 @@ export class TenantsService {
   }
 
   async getAvailability(tenantId: string, start: Date, end: Date) {
-    const [rooms, vehicles] = await Promise.all([
+    const [rooms, vehicles, tables] = await Promise.all([
       this.prisma.room.findMany({ where: { tenantId }, select: { id: true } }),
       this.prisma.vehicle.findMany({ where: { tenantId }, select: { id: true } }),
+      this.prisma.table.findMany({ where: { tenantId }, select: { id: true } }),
     ]);
-    const resourceIds = [...rooms.map((r) => r.id), ...vehicles.map((v) => v.id)];
+    const resourceIds = [...rooms.map((r) => r.id), ...vehicles.map((v) => v.id), ...tables.map((t) => t.id)];
     if (resourceIds.length === 0) return [];
 
     return this.prisma.availability.findMany({
@@ -131,11 +143,12 @@ export class TenantsService {
   }
 
   async listCatalogue(tenantId: string) {
-    const [rooms, vehicles] = await Promise.all([
+    const [rooms, vehicles, tables] = await Promise.all([
       this.prisma.room.findMany({ where: { tenantId } }),
       this.prisma.vehicle.findMany({ where: { tenantId } }),
+      this.prisma.table.findMany({ where: { tenantId } }),
     ]);
-    return { rooms, vehicles };
+    return { rooms, vehicles, tables };
   }
 
   async createCatalogueItem(tenantId: string, dto: CatalogueItemDto) {
@@ -159,6 +172,20 @@ export class TenantsService {
           capacityChildren: dto.capacityChildren ?? 0,
           sizeSqm: dto.sizeSqm,
           kind: dto.kind ?? 'room',
+        },
+      });
+    }
+
+    if (tenant.type === TenantType.RESTAURANT) {
+      if (!dto.name || dto.capacity === undefined || dto.price === undefined) {
+        throw new BadRequestException('name, capacity et price sont requis pour créer une table.');
+      }
+      return this.prisma.table.create({
+        data: {
+          tenantId,
+          name: dto.name,
+          capacity: dto.capacity,
+          basePrice: dto.price,
         },
       });
     }
@@ -207,6 +234,21 @@ export class TenantsService {
       });
     }
 
+    const table = await this.prisma.table.findUnique({ where: { id: itemId } });
+    if (table) {
+      if (table.tenantId !== tenantId) {
+        throw new NotFoundException('Table introuvable pour cet établissement.');
+      }
+      return this.prisma.table.update({
+        where: { id: itemId },
+        data: {
+          ...(dto.name !== undefined ? { name: dto.name } : {}),
+          ...(dto.capacity !== undefined ? { capacity: dto.capacity } : {}),
+          ...(dto.price !== undefined ? { basePrice: dto.price } : {}),
+        },
+      });
+    }
+
     const vehicle = await this.prisma.vehicle.findUnique({ where: { id: itemId } });
     if (!vehicle || vehicle.tenantId !== tenantId) {
       throw new NotFoundException('Élément de catalogue introuvable pour cet établissement.');
@@ -235,9 +277,107 @@ export class TenantsService {
       }
       return;
     }
+    if (resourceType === ResourceType.TABLE) {
+      const table = await this.prisma.table.findUnique({ where: { id: resourceId } });
+      if (!table || table.tenantId !== tenantId) {
+        throw new NotFoundException('Table introuvable pour cet établissement.');
+      }
+      return;
+    }
     const vehicle = await this.prisma.vehicle.findUnique({ where: { id: resourceId } });
     if (!vehicle || vehicle.tenantId !== tenantId) {
       throw new NotFoundException('Véhicule introuvable pour cet établissement.');
     }
+  }
+
+  async apply(dto: import('./dto/apply-tenant.dto').ApplyTenantDto) {
+    return this.prisma.tenantRequest.create({
+      data: {
+        companyName: dto.companyName,
+        type: dto.type,
+        contactName: dto.contactName,
+        contactEmail: dto.contactEmail,
+        contactPhone: dto.contactPhone,
+        description: dto.description,
+        city: dto.city,
+        address: dto.address,
+        notes: dto.notes,
+      },
+    });
+  }
+
+  async listEmployees(tenantId: string, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.tenantEmployee.findMany({
+        where: { tenantId },
+        include: {
+          user: { select: { id: true, firstName: true, lastName: true, email: true, phone: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      this.prisma.tenantEmployee.count({ where: { tenantId } })
+    ]);
+
+    return {
+      data,
+      meta: { total, page, limit, lastPage: Math.ceil(total / limit) },
+    };
+  }
+
+  async addEmployee(tenantId: string, dto: import('./dto/employee.dto').CreateEmployeeDto) {
+    const { randomBytes } = await import('crypto');
+    let user = await this.prisma.user.findFirst({
+      where: { OR: [{ phone: dto.phone }, { email: dto.email }].filter(Boolean) as any },
+    });
+
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          firstName: dto.firstName,
+          lastName: dto.lastName,
+          phone: dto.phone,
+          email: dto.email || undefined,
+          passwordHash: null,
+          role: dto.role,
+          referralCode: randomBytes(4).toString('hex').toUpperCase(),
+        },
+      });
+    }
+
+    const existingEmp = await this.prisma.tenantEmployee.findFirst({
+      where: { tenantId, userId: user.id },
+    });
+    if (existingEmp) {
+      throw new BadRequestException('Cet utilisateur fait déjà partie des employés.');
+    }
+
+    return this.prisma.tenantEmployee.create({
+      data: {
+        tenantId,
+        userId: user.id,
+        role: dto.role,
+        permissions: dto.permissions ?? [],
+      },
+      include: { user: { select: { id: true, firstName: true, lastName: true, email: true, phone: true } } },
+    });
+  }
+
+  async updateEmployee(tenantId: string, employeeId: string, dto: import('./dto/employee.dto').UpdateEmployeeDto) {
+    const emp = await this.prisma.tenantEmployee.findUnique({ where: { id: employeeId } });
+    if (!emp || emp.tenantId !== tenantId) {
+      throw new NotFoundException('Employé introuvable pour cet établissement.');
+    }
+
+    return this.prisma.tenantEmployee.update({
+      where: { id: employeeId },
+      data: {
+        ...(dto.role ? { role: dto.role } : {}),
+        ...(dto.permissions ? { permissions: dto.permissions } : {}),
+        ...(dto.isActive !== undefined ? { isActive: dto.isActive } : {}),
+      },
+    });
   }
 }

@@ -1,5 +1,5 @@
-import ProEmployees from '@/components/pro/ProEmployees'
+import EmployeeManager from '@/components/EmployeeManager';
 
 export default function HotelEmployeesPage() {
-  return <ProEmployees type="hotel" />
+  return <EmployeeManager />;
 }

@@ -18,11 +18,14 @@ enum UserRole {
 enum TenantType {
   HOTEL
   CAR_RENTAL
+  RESTAURANT
+  AGENCY
 }
 
 enum ResourceType {
   ROOM
   VEHICLE
+  TABLE
 }
 
 enum BookingStatus {
@@ -61,36 +64,38 @@ enum ReferralRewardStatus {
 }
 
 model User {
-  id            String           @id @default(uuid())
-  phone         String?          @unique
-  email         String?          @unique
-  googleId      String?          @unique
-  passwordHash  String?
-  refreshTokenHash String?
+  id                  String               @id @default(uuid())
+  phone               String?              @unique
+  email               String?              @unique
+  googleId            String?              @unique
+  passwordHash        String?
+  refreshTokenHash    String?
   // Optionnels avec défaut : un compte créé via OTP téléphone n'a pas de nom au départ,
   // renseigné ensuite via PATCH /users/me.
-  firstName     String           @default("")
-  lastName      String           @default("")
-  avatarUrl     String?
-  address       String?
-  walletBalance Decimal          @default(0)
-  referralCode  String           @unique
-  referredById  String?
-  fcmToken      String?
-  role          UserRole         @default(CUSTOMER)
-  isActive      Boolean          @default(true)
+  firstName           String               @default("")
+  lastName            String               @default("")
+  avatarUrl           String?
+  address             String?
+  walletBalance       Decimal              @default(0)
+  referralCode        String               @unique
+  referredById        String?
+  fcmToken            String?
+  role                UserRole             @default(CUSTOMER)
+  isActive            Boolean              @default(true)
   // Prouvé soit par un lien de vérification (inscription email), soit directement
   // par Google OAuth (voir AuthService.validateGoogleUser) — sert à décider si un
   // compte peut être lié en confiance à une connexion Google future.
-  isEmailVerified Boolean        @default(false)
-  createdAt     DateTime         @default(now())
-  bookings      Booking[]
-  employeeOf    TenantEmployee[]
-  emailVerifications EmailVerification[]
+  isEmailVerified     Boolean              @default(false)
+  createdAt           DateTime             @default(now())
+  bookings            Booking[]
+  employeeOf          TenantEmployee[]
+  emailVerifications  EmailVerification[]
   // BACK-06 : Relations FK avec Referral pour l'int\u00e9grit\u00e9 r\u00e9f\u00e9rentielle
-  referralsMade     Referral[]   @relation("ReferrerReferrals")
-  referralReceived  Referral?    @relation("ReferredReferral")
+  referralsMade       Referral[]           @relation("ReferrerReferrals")
+  referralReceived    Referral?            @relation("ReferredReferral")
   savedPaymentMethods SavedPaymentMethod[]
+  partnerApplications PartnerApplication[]
+  tableReservations   TableReservation[]
 }
 
 // R\u00e9f\u00e9rence \u00e0 un moyen de paiement (num\u00e9ro mobile money tokenis\u00e9 c\u00f4t\u00e9 CinetPay, ou
@@ -109,7 +114,7 @@ model SavedPaymentMethod {
 }
 
 model Tenant {
-  id              String           @id @default(uuid())
+  id              String                   @id @default(uuid())
   name            String
   type            TenantType
   description     String?
@@ -119,13 +124,17 @@ model Tenant {
   lng             Float?
   coverImageUrl   String?
   images          String[]
-  isActive        Boolean          @default(true)
-  isPlatformOwned Boolean          @default(true)
-  createdAt       DateTime         @default(now())
+  isActive        Boolean                  @default(true)
+  isPlatformOwned Boolean                  @default(true)
+  createdAt       DateTime                 @default(now())
   rooms           Room[]
   vehicles        Vehicle[]
   employees       TenantEmployee[]
   bookings        Booking[]
+  tables          Table[]
+  menuCategories  RestaurantMenuCategory[]
+  commissions     Commission[]
+  restaurant      Restaurant?
 }
 
 model TenantEmployee {
@@ -144,23 +153,23 @@ model TenantEmployee {
 }
 
 model Room {
-  id          String   @id @default(uuid())
-  tenantId    String
-  tenant      Tenant   @relation(fields: [tenantId], references: [id])
-  name        String
-  description String?
-  maxGuests   Int
-  basePrice   Decimal
-  images      String[]
-  amenities   String[]
-  isActive    Boolean  @default(true)
+  id               String   @id @default(uuid())
+  tenantId         String
+  tenant           Tenant   @relation(fields: [tenantId], references: [id])
+  name             String
+  description      String?
+  maxGuests        Int
+  basePrice        Decimal
+  images           String[]
+  amenities        String[]
+  isActive         Boolean  @default(true)
   // Détail affiché côté vitrine publique (capacité adulte/enfant séparée, surface,
   // "kind" pour les variantes visuelles type piscine/suite) — pas dans le document
   // technique d'origine, ajouté pour préserver la richesse déjà présente côté frontend.
-  capacityAdults   Int    @default(1)
-  capacityChildren Int    @default(0)
+  capacityAdults   Int      @default(1)
+  capacityChildren Int      @default(0)
   sizeSqm          Int?
-  kind             String @default("room")
+  kind             String   @default("room")
 
   @@index([tenantId])
 }
@@ -184,11 +193,11 @@ model Vehicle {
 }
 
 model Availability {
-  id           String              @id @default(uuid())
+  id           String             @id @default(uuid())
   resourceType ResourceType
   resourceId   String
   date         DateTime
-  status       AvailabilityStatus  @default(AVAILABLE)
+  status       AvailabilityStatus @default(AVAILABLE)
   customPrice  Decimal?
 
   @@unique([resourceType, resourceId, date])
@@ -305,4 +314,163 @@ model EmailVerification {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+enum TenantRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model TenantRequest {
+  id           String              @id @default(uuid())
+  companyName  String
+  type         TenantType
+  contactName  String
+  contactEmail String
+  contactPhone String
+  description  String?
+  city         String
+  address      String
+  status       TenantRequestStatus @default(PENDING)
+  notes        String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+}
+
+model Table {
+  id        String   @id @default(uuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String // ex: "Table 1 (Terrasse)", "Table VIP"
+  capacity  Int // max persons
+  basePrice Decimal // L'acompte (deposit)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+}
+
+model RestaurantMenuCategory {
+  id        String     @id @default(uuid())
+  tenantId  String
+  tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String // ex: "Entrées", "Plats", "Desserts", "Boissons"
+  order     Int        @default(0)
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([tenantId])
+}
+
+model MenuItem {
+  id          String                 @id @default(uuid())
+  categoryId  String
+  category    RestaurantMenuCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  price       Decimal
+  imageUrl    String?
+  isAvailable Boolean                @default(true)
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+
+  @@index([categoryId])
+}
+
+enum PartnerApplicationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  NEEDS_INFO
+}
+
+enum CommissionPayoutStatus {
+  PENDING
+  PAID
+}
+
+model Commission {
+  id               String                 @id @default(uuid())
+  tenantId         String
+  tenant           Tenant                 @relation(fields: [tenantId], references: [id])
+  bookingType      String                 // HOTEL, VEHICLE, RESTAURANT, FLIGHT
+  bookingRef       String                 // référence de la réservation source, quel que soit son type
+  grossAmount      Decimal
+  commissionRate   Decimal
+  commissionAmount Decimal
+  netAmount        Decimal
+  payoutStatus     CommissionPayoutStatus @default(PENDING)
+  payoutDate       DateTime?
+  createdAt        DateTime               @default(now())
+
+  @@index([tenantId])
+  @@index([payoutStatus])
+}
+
+model PartnerApplication {
+  id                String                   @id @default(uuid())
+  applicantUserId   String
+  applicant         User                     @relation(fields: [applicantUserId], references: [id])
+  businessName      String
+  serviceType       TenantType
+  registryNumber    String
+  legalDocUrl       String
+  idDocUrl          String
+  contactPhone      String
+  contactEmail      String
+  status            PartnerApplicationStatus @default(PENDING)
+  reviewNotes       String?
+  reviewedByUserId  String?
+  createdAt         DateTime                 @default(now())
+  reviewedAt        DateTime?
+
+  @@index([status])
+  @@index([applicantUserId])
+}
+
+model Restaurant {
+  id            String             @id @default(uuid())
+  tenantId      String             @unique
+  tenant        Tenant             @relation(fields: [tenantId], references: [id])
+  cuisineType   String[]
+  priceRange    String
+  openingHours  Json
+  capacity      Int
+  reservations  TableReservation[]
+}
+
+enum TableReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+}
+
+model TableReservation {
+  id              String                 @id @default(uuid())
+  userId          String
+  user            User                   @relation(fields: [userId], references: [id])
+  restaurantId    String
+  restaurant      Restaurant             @relation(fields: [restaurantId], references: [id])
+  reservationDate DateTime
+  reservationTime String
+  partySize       Int
+  status          TableReservationStatus @default(PENDING)
+  specialRequests String?
+  createdAt       DateTime               @default(now())
+
+  @@index([restaurantId, reservationDate])
+  @@index([userId])
+}
+
+model PlatformSetting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
 }

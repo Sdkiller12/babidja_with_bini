@@ -1,0 +1,7 @@
+# Ignore installer binaries and documentation/screenshots in root
+/*.exe
+/*.pdf
+/*.docx
+/*.png
+/*.jpeg
+/*.jpg

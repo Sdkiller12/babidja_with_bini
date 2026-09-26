@@ -41,13 +41,13 @@ export default function HotelLogin() {
   }
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-gradient-to-br from-orange-100 via-orange-50 to-orange-200 px-4">
+    <div className="relative grid min-h-dvh w-full min-w-0 place-items-center overflow-x-clip bg-gradient-to-br from-orange-100 via-orange-50 to-orange-200 px-4 py-8">
       {/* Décor Hôtel */}
-      <Building2 className="absolute left-10 top-20 size-32 text-secondary/20" aria-hidden="true" />
-      <Key className="absolute right-16 top-32 size-20 text-secondary/30" aria-hidden="true" />
-      <Users className="absolute bottom-20 left-20 size-24 text-secondary/20" aria-hidden="true" />
+      <Building2 className="absolute left-10 top-20 hidden size-32 text-secondary/20 sm:block" aria-hidden="true" />
+      <Key className="absolute right-16 top-32 hidden size-20 text-secondary/30 sm:block" aria-hidden="true" />
+      <Users className="absolute bottom-20 left-20 hidden size-24 text-secondary/20 sm:block" aria-hidden="true" />
 
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-gray-100 relative z-10">
+      <div className="w-full min-w-0 max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl ring-1 ring-gray-100 relative z-10">
         <div className="flex justify-center">
           <Logo variant="pro" />
         </div>

@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Globe, ChevronDown, House, CalendarDays, BedDouble, User, Car } from 'lucide-react'
+import { Globe, ChevronDown, House, BedDouble, User, Car, Utensils } from 'lucide-react'
 import Logo from '../Logo'
 import Button from '../ui/Button'
 import { useAuthStore } from '../../store/useAuthStore'
@@ -10,6 +10,7 @@ const links = [
   { href: '/', label: 'Accueil' },
   { href: '/chambres', label: 'Chambres & Suites' },
   { href: '/voitures', label: 'Location de voitures' },
+  { href: '/restaurants', label: 'Gastronomie' },
   { href: '/compte/reservations', label: 'Mes réservations' },
 ]
 
@@ -62,7 +63,7 @@ export default function NavbarPublic() {
         <MobileItem href="/" icon={House} label="Accueil" pathname={pathname} />
         <MobileItem href="/chambres" icon={BedDouble} label="Hôtel" pathname={pathname} />
         <MobileItem href="/voitures" icon={Car} label="Voitures" pathname={pathname} />
-        <MobileItem href="/compte/reservations" icon={CalendarDays} label="Réservations" pathname={pathname} />
+        <MobileItem href="/restaurants" icon={Utensils} label="Resto" pathname={pathname} />
         <MobileItem href="/compte" icon={User} label="Profil" pathname={pathname} />
       </nav>
     </>

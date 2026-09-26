@@ -10,9 +10,9 @@ export default function Logo({ variant = 'public', to = '/', className = '' }) {
       <Image
         src="/logo.jpeg"
         alt="Logo Babydja"
-        width={1024}
-        height={1024}
-        className={variant === 'pro' ? 'h-8 w-auto sm:h-12' : 'h-14 w-auto object-contain sm:h-16 lg:h-20'}
+        width={256}
+        height={256}
+        className={variant === 'pro' ? 'h-8 w-auto max-w-full object-contain sm:h-10' : 'h-10 w-auto max-w-full object-contain sm:h-12 lg:h-14'}
       />
     </Link>
   )

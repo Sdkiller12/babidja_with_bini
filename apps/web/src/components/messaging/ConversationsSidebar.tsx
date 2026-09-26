@@ -55,7 +55,7 @@ export default function ConversationsSidebar({ onSelectBooking, selectedBookingI
   }
 
   return (
-    <div className="flex flex-col h-[600px] bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden w-full max-w-sm">
+    <div className="flex h-[50dvh] max-h-[34rem] min-h-[18rem] sm:h-[600px] sm:max-h-[70dvh] w-full min-w-0 max-w-full sm:max-w-sm flex-col bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-gray-100 bg-gray-50">
         <h2 className="font-bold text-gray-900">Conversations</h2>
         <p className="text-xs text-gray-500">Sélectionnez une réservation</p>

@@ -12,7 +12,7 @@ const kpiStyle: Record<string, string> = {
 }
 const kpiIcon: Record<string, LucideIcon> = { bed: BedDouble, percent: Percent, coins: Coins, help: CircleHelp, car: Car }
 
-export default function ProDashboard({ type = 'hotel' }: { type?: 'hotel' | 'car' }) {
+export default function ProDashboard({ type = 'hotel' }: { type?: 'hotel' | 'car' | 'restaurant' }) {
   const isCar = type === 'car'
   const config = isCar ? carConfig : hotelConfig
   const kpis = isCar ? carKpis : hotelKpis
@@ -20,19 +20,19 @@ export default function ProDashboard({ type = 'hotel' }: { type?: 'hotel' | 'car
   const reservations = isCar ? carReservations : hotelReservations
 
   return (
-    <div>
-      <h1 className="text-xl font-bold">Tableau de bord — {config.name}</h1>
+    <div className="w-full min-w-0">
+      <h1 className="text-balance text-lg sm:text-xl font-bold">Tableau de bord — {config.name}</h1>
 
       {/* KPIs */}
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-4 grid min-w-0 grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {kpis.map((kpi, i) => {
           const Icon = kpiIcon[kpi.icon] || CircleHelp
           const color = i === 0 ? 'primary' : i === 1 ? 'secondary' : i === 2 ? 'primary' : 'danger'
           return (
-            <div key={kpi.id} className={`flex items-center justify-between gap-3 rounded-2xl p-5 text-white ${kpiStyle[color]}`}>
-              <div>
+            <div key={kpi.id} className={`flex min-w-0 items-center justify-between gap-3 rounded-2xl p-4 sm:p-5 text-white ${kpiStyle[color]}`}>
+              <div className="min-w-0">
                 <p className="text-xs font-medium text-white/90">{kpi.label}</p>
-                <p className="mt-1 text-2xl font-extrabold">{kpi.value}</p>
+                <p className="mt-1 truncate text-xl sm:text-2xl font-extrabold">{kpi.value}</p>
               </div>
               <Icon className="size-9 shrink-0 text-white/70" />
             </div>
@@ -41,9 +41,9 @@ export default function ProDashboard({ type = 'hotel' }: { type?: 'hotel' | 'car
       </div>
 
       {/* Évolution des réservations */}
-      <section className="mt-5 rounded-2xl bg-white p-5 shadow-sm">
+      <section className="mt-5 min-w-0 rounded-2xl bg-white p-4 sm:p-5 shadow-sm">
         <h2 className="font-bold">Évolution des réservations (30 jours)</h2>
-        <div className="mt-4 h-72">
+        <div className="mt-4 h-60 sm:h-72 min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 5, right: 10, bottom: 0, left: -20 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -59,10 +59,10 @@ export default function ProDashboard({ type = 'hotel' }: { type?: 'hotel' | 'car
       </section>
 
       {/* Dernières réservations */}
-      <section className="mt-5 rounded-2xl bg-white p-5 shadow-sm">
+      <section className="mt-5 min-w-0 rounded-2xl bg-white p-4 sm:p-5 shadow-sm">
         <h2 className="font-bold">Dernières réservations</h2>
-        <div className="mt-3 overflow-x-auto">
-          <table className="w-full min-w-md text-left text-sm">
+        <div className="mt-3 min-w-0 overflow-x-auto">
+          <table className="w-full min-w-[28rem] whitespace-nowrap text-left text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-gray-500">
                 <th className="py-2 font-semibold">Client</th>

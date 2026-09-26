@@ -48,27 +48,28 @@ export default function BookingPayment() {
 
   return (
     <>
-      <h1 className="text-2xl font-extrabold text-secondary">
+      <h1 className="text-balance text-xl sm:text-2xl font-extrabold text-secondary">
         Choisissez votre moyen de paiement
       </h1>
       <p className="mt-2 text-sm text-gray-600">
         Choisissez votre moyen de paiement pour finaliser en toute sécurité.
       </p>
 
-      <div className="mt-5 grid grid-cols-2 gap-3">
+      <div className="mt-5 grid min-w-0 grid-cols-2 gap-2 sm:gap-3">
         {paymentChoices.map((c) => (
           <button
             key={c.id}
             type="button"
             onClick={() => setSelected(c.id)}
-            className={`flex flex-col items-center gap-2 rounded-2xl border-2 p-4 transition-colors ${
+            aria-pressed={selected === c.id}
+            className={`flex min-h-[44px] min-w-0 flex-col items-center gap-1.5 sm:gap-2 rounded-2xl border-2 p-3 sm:p-4 transition-colors ${
               selected === c.id ? 'border-secondary bg-pastel' : 'border-gray-200 bg-white hover:border-gray-300'
             }`}
           >
-            <PaymentLogo method={c.logo} className="h-10 w-16" />
-            <span className="text-sm font-bold">{c.label}</span>
-            <span className="flex items-center gap-1 text-[11px] text-gray-500">
-              <Lock className="size-3 text-secondary" /> Paiement 100% sécurisé
+            <PaymentLogo method={c.logo} className="h-8 w-14 sm:h-10 sm:w-16" />
+            <span className="truncate text-[13px] sm:text-sm font-bold">{c.label}</span>
+            <span className="flex items-center gap-1 text-xs text-gray-500">
+              <Lock className="size-3 shrink-0 text-secondary" /> Paiement 100% sécurisé
             </span>
           </button>
         ))}

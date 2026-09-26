@@ -65,7 +65,19 @@ export class ReferralService {
   }
 
   findByUser(userId: string) {
-    return this.prisma.referral.findMany({ where: { referrerId: userId }, orderBy: { createdAt: 'desc' } });
+    return this.prisma.referral.findMany({ 
+      where: { referrerId: userId }, 
+      orderBy: { createdAt: 'desc' },
+      include: {
+        referred: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true,
+          }
+        }
+      }
+    });
   }
 
   private resolveRewardAmount(): number | null {

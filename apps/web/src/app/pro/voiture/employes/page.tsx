@@ -1,5 +1,5 @@
-import ProEmployees from '@/components/pro/ProEmployees'
+import EmployeeManager from '@/components/EmployeeManager';
 
-export default function CarEmployeesPage() {
-  return <ProEmployees type="car" />
+export default function VoitureEmployeesPage() {
+  return <EmployeeManager />;
 }

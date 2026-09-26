@@ -36,3 +36,10 @@ next-env.d.ts
 
 # prisma
 apps/api/prisma/migrations/dev.db
+.env*
+
+# large binaries & docs in root
+/*.exe
+/*.pdf
+/*.docx
+

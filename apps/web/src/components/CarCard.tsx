@@ -11,13 +11,13 @@ export default function CarCard({ car, variant = 'catalog' }: { car: Vehicle; va
       href={`/voiture/${car.id}`}
       className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg focus-visible:-translate-y-1 focus-visible:shadow-lg"
     >
-      <div className="relative h-48 w-full overflow-hidden">
+      <div className="relative h-44 sm:h-48 w-full overflow-hidden">
         {car.images && car.images.length > 0 ? (
-          <Image src={car.images[0]} alt={car.name} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
+          <Image src={car.images[0]} alt={car.name} fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
         ) : (
-          <Placeholder kind={car.kind || 'car'} className="h-48 w-full" />
+          <Placeholder kind={car.kind || 'car'} className="h-44 sm:h-48 w-full" />
         )}
-        <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-4 pb-3 pt-12 text-lg font-bold text-white">
+        <span className="absolute inset-x-0 bottom-0 line-clamp-2 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-4 pb-3 pt-12 text-base sm:text-lg font-bold text-white">
           {car.name}
         </span>
       </div>

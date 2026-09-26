@@ -23,6 +23,10 @@ import { ReferralModule } from './referral/referral.module';
 import { MessagingModule } from './messaging/messaging.module';
 import { AdminModule } from './admin/admin.module';
 import { StorageModule } from './storage/storage.module';
+import { RestaurantsModule } from './restaurants/restaurants.module';
+import { PartnersModule } from './partners/partners.module';
+import { CommissionsModule } from './commissions/commissions.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -50,6 +54,9 @@ import { StorageModule } from './storage/storage.module';
     MessagingModule,
     AdminModule,
     StorageModule,
+    RestaurantsModule,
+    PartnersModule,
+    CommissionsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

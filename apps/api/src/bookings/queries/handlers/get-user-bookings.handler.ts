@@ -7,6 +7,6 @@ export class GetUserBookingsHandler implements IQueryHandler<GetUserBookingsQuer
   constructor(private readonly bookingsService: BookingsService) {}
 
   async execute(query: GetUserBookingsQuery) {
-    return this.bookingsService.findUserBookings(query.userId);
+    return this.bookingsService.findUserBookings(query.userId, query.status, query.page, query.limit);
   }
 }

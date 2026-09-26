@@ -25,13 +25,25 @@ const carItems = [
 ]
 
 import AuthGuard from '@/components/auth/AuthGuard'
+import { UtensilsCrossed } from 'lucide-react'
+
+const restaurantItems = [
+  { href: '/pro/restaurant', icon: House, label: 'Tableau de bord', exact: true },
+  { href: '/pro/restaurant/reservations', icon: CalendarDays, label: 'Réservations' },
+  { href: '/pro/restaurant/catalogue', icon: UtensilsCrossed, label: 'Menu' },
+  { href: '/pro/restaurant/employes', icon: Users, label: 'Employés' },
+  { href: '/pro/restaurant/messagerie', icon: MessageSquare, label: 'Messagerie' },
+  { href: '/pro/restaurant/parametres', icon: Settings, label: 'Paramètres' },
+]
 
 export default function ProLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
-  // Déduire le type de pro à partir de l'URL pour la démonstration.
-  // Par défaut, on va dire Hotel, sauf si /pro/voiture est dans l'URL.
   const isCar = pathname.includes('/pro/voiture')
-  const redirectUrl = isCar ? '/auth/pro/voiture' : '/auth/pro/hotel'
+  const isRestaurant = pathname.includes('/pro/restaurant')
+  
+  let redirectUrl = '/auth/pro/hotel'
+  if (isCar) redirectUrl = '/auth/pro/voiture'
+  if (isRestaurant) redirectUrl = '/auth/pro/restaurant'
 
   if (isCar) {
     return (
@@ -43,6 +55,23 @@ export default function ProLayout({ children }: { children: React.ReactNode }) {
           sidebarText="text-gray-600"
           activeClass="bg-slate-900 text-white font-bold shadow-sm"
           hoverClass="hover:bg-gray-50"
+        >
+          {children}
+        </DashboardShell>
+      </AuthGuard>
+    )
+  }
+
+  if (isRestaurant) {
+    return (
+      <AuthGuard redirectUrl={redirectUrl} allowedRoles={['TENANT_ADMIN', 'TENANT_EMPLOYEE']}>
+        <DashboardShell
+          navItems={restaurantItems}
+          userTitle="Gérant de Restaurant" 
+          sidebarBg="bg-amber-900"
+          sidebarText="text-amber-50"
+          activeClass="bg-white text-amber-900 font-bold shadow-sm"
+          hoverClass="hover:bg-amber-800 hover:text-white"
         >
           {children}
         </DashboardShell>

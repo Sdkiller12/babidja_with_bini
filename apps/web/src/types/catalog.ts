@@ -22,3 +22,12 @@ export interface Vehicle {
   kind: 'car';
   images?: string[];
 }
+
+export interface Tenant {
+  id: string;
+  name: string;
+  type: string;
+  city?: string;
+  address?: string;
+  isActive: boolean;
+}

@@ -58,4 +58,10 @@ export default () => ({
   deposit: {
     rateDefault: parseFloat(process.env.DEPOSIT_RATE_DEFAULT ?? '0.30'),
   },
+  commissions: {
+    hotelRate: parseFloat(process.env.COMMISSION_RATE_HOTEL ?? '0'),
+    carRentalRate: parseFloat(process.env.COMMISSION_RATE_CAR_RENTAL ?? '0'),
+    restaurantRate: parseFloat(process.env.COMMISSION_RATE_RESTAURANT ?? '0'),
+    flightFlat: parseFloat(process.env.COMMISSION_FLAT_FLIGHT ?? '0'),
+  }
 });

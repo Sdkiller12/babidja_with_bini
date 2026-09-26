@@ -6,10 +6,11 @@ import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { fcfa } from '@/utils/formatters'
 import { useQuery } from '@tanstack/react-query'
-import { fetchMyBookings } from '@/lib/api/bookings'
+import { fetchMyBookings, submitReview } from '@/lib/api/bookings'
 import type { Booking } from '@/types/booking'
-import http from '@/lib/http'
+// import http from '@/lib/http'
 import { extractErrorMessage } from '@/lib/api/errors'
+import Pagination from '@/components/ui/Pagination'
 
 const statusFilters = ['Toutes', 'À venir', 'En cours', 'Terminées', 'Annulées']
 const typeFilters = ['Tous', 'Hôtels', 'Voitures']
@@ -123,7 +124,7 @@ function ReviewModal({ booking, onClose }: { booking: Booking; onClose: () => vo
     setError('')
     setLoading(true)
     try {
-      await http.post('/reviews', { bookingId: booking.id, rating, comment })
+      await submitReview(booking.id, { rating, comment })
       setDone(true)
     } catch (err) {
       setError(extractErrorMessage(err, "Impossible d'envoyer l'avis. Réessayez."))
@@ -200,15 +201,19 @@ function ReviewModal({ booking, onClose }: { booking: Booking; onClose: () => vo
 export default function Reservations() {
   const [status, setStatus] = useState('Toutes')
   const [type, setType] = useState('Tous')
+  const [page, setPage] = useState(1)
   const [detailBooking, setDetailBooking] = useState<Booking | null>(null)
   const [reviewBooking, setReviewBooking] = useState<Booking | null>(null)
 
-  const { data: reservations = [], isLoading, isError } = useQuery<Booking[]>({
-    queryKey: ['my-bookings'],
-    queryFn: fetchMyBookings,
+  const { data: response, isLoading, isError } = useQuery({
+    queryKey: ['my-bookings', page],
+    queryFn: () => fetchMyBookings(page, 10),
   })
 
-  const shown = reservations.filter((r) => {
+  const reservations = response?.data || []
+  const meta = response?.meta
+
+  const shown = reservations.filter((r: Booking) => {
     const rStatus = statusLabel[r.status] || r.status
     const okStatus =
       status === 'Toutes' ||
@@ -263,7 +268,7 @@ export default function Reservations() {
             <p className="col-span-full py-8 text-center text-sm text-red-500">Erreur lors du chargement des réservations.</p>
           )}
 
-          {!isLoading && !isError && shown.map((r) => (
+          {!isLoading && !isError && shown.map((r: Booking) => (
             <article key={r.id} className="rounded-2xl border border-gray-200 p-4">
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-start gap-3">
@@ -297,6 +302,14 @@ export default function Reservations() {
             <p className="col-span-full py-8 text-center text-sm text-gray-500">Aucune réservation dans cette catégorie.</p>
           )}
         </div>
+
+        {meta && meta.lastPage > 1 && (
+          <Pagination 
+            currentPage={page} 
+            lastPage={meta.lastPage} 
+            onPageChange={setPage} 
+          />
+        )}
       </div>
 
       {detailBooking && (

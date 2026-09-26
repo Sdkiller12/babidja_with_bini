@@ -159,13 +159,13 @@ export default function CarBookingSidebar({ car }) {
       </div>
 
       {/* Barre de réservation sticky (Mobile) */}
-      <div className="fixed inset-x-0 bottom-16 z-50 border-t border-gray-200 bg-white px-4 pt-3 pb-4 shadow-[0_-8px_20px_-4px_rgba(0,0,0,0.15)] md:hidden">
-        <div className="flex items-center justify-between gap-4">
-          <div>
+      <div className="fixed inset-x-0 bottom-[calc(4rem+env(safe-area-inset-bottom))] z-50 border-t border-gray-200 bg-white px-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-8px_20px_-4px_rgba(0,0,0,0.15)] md:hidden">
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <div className="min-w-0">
             <span className="text-xs text-gray-500 uppercase font-bold">À partir de</span>
-            <p className="text-xl font-extrabold text-primary">{fcfa(car.price)}<span className="text-xs text-gray-500 font-medium"> / jour</span></p>
+            <p className="truncate text-lg sm:text-xl font-extrabold text-primary">{fcfa(car.price)}<span className="text-xs text-gray-500 font-medium"> / jour</span></p>
           </div>
-          <Button onClick={() => setIsConfiguring(true)} className="px-8">
+          <Button onClick={() => setIsConfiguring(true)} className="min-h-[44px] shrink-0 px-6 sm:px-8">
             Réserver
           </Button>
         </div>
@@ -175,7 +175,7 @@ export default function CarBookingSidebar({ car }) {
       {isConfiguring && (
         <div className="fixed inset-0 z-[60] flex items-end justify-center md:hidden">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsConfiguring(false)} />
-          <div className="relative w-full max-h-[90vh] overflow-y-auto rounded-t-3xl bg-white p-6 shadow-2xl animate-in slide-in-from-bottom-full duration-300">
+          <div className="relative w-full max-h-[90dvh] overflow-y-auto rounded-t-3xl bg-white p-5 sm:p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-2xl animate-in slide-in-from-bottom-full duration-300">
             <button 
               onClick={() => setIsConfiguring(false)}
               className="absolute right-4 top-4 grid size-8 place-items-center rounded-full bg-gray-100 text-gray-500"

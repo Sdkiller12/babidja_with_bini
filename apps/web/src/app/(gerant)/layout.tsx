@@ -91,22 +91,22 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex w-full min-w-0 flex-1 flex-col overflow-hidden">
         {/* Header Mobile */}
-        <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:hidden">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b border-gray-200 bg-white px-4 md:hidden">
           <Logo />
-          <Link href="/" className="text-sm font-semibold text-[#e97c2a]">Quitter</Link>
+          <Link href="/" className="inline-flex min-h-[44px] items-center text-sm font-semibold text-[#e97c2a]">Quitter</Link>
         </header>
         
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="mx-auto max-w-5xl">
+        <main className="w-full min-w-0 flex-1 overflow-y-auto overflow-x-clip p-4 pb-28 sm:p-6 md:p-8 md:pb-8">
+          <div className="mx-auto w-full min-w-0 max-w-5xl">
             {children}
           </div>
         </main>
       </div>
 
       {/* Navigation Mobile Bottom */}
-      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-around border-t border-gray-200 bg-white px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-bottom, 1rem))] md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-40 flex items-end justify-around border-t border-gray-200 bg-white px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden">
         {adminItems.map((item) => {
           const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href)
           return (

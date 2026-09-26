@@ -6,7 +6,9 @@ import { DashboardShell } from '@/components/layout/DashboardShell'
 const superAdminItems = [
   { href: '/admin', icon: House, label: 'Vue d’ensemble', exact: true },
   { href: '/admin/etablissements', icon: Building2, label: 'Établissements' },
+  { href: '/admin/demandes', icon: Building2, label: 'Demandes' },
   { href: '/admin/transactions', icon: ArrowLeftRight, label: 'Transactions' },
+  { href: '/admin/commissions', icon: ArrowLeftRight, label: 'Commissions' },
   { href: '/admin/parametres', icon: Settings, label: 'Paramètres globaux' },
 ]
 

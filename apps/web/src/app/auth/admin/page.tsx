@@ -41,13 +41,13 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-gradient-to-br from-primary/30 via-primary/10 to-primary/40 px-4">
+    <div className="relative grid min-h-dvh w-full min-w-0 place-items-center overflow-x-clip bg-gradient-to-br from-primary/30 via-primary/10 to-primary/40 px-4 py-8">
       {/* Décor Super Admin */}
-      <ShieldCheck className="absolute left-10 top-20 size-32 text-primary/20" aria-hidden="true" />
-      <Server className="absolute right-16 top-32 size-20 text-primary/20" aria-hidden="true" />
-      <Globe className="absolute bottom-20 left-20 size-24 text-primary/20" aria-hidden="true" />
+      <ShieldCheck className="absolute left-10 top-20 hidden size-32 text-primary/20 sm:block" aria-hidden="true" />
+      <Server className="absolute right-16 top-32 hidden size-20 text-primary/20 sm:block" aria-hidden="true" />
+      <Globe className="absolute bottom-20 left-20 hidden size-24 text-primary/20 sm:block" aria-hidden="true" />
 
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-2xl ring-1 ring-primary/20 relative z-10">
+      <div className="w-full min-w-0 max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl ring-1 ring-primary/20 relative z-10">
         <div className="flex justify-center">
           <Logo variant="pro" />
         </div>

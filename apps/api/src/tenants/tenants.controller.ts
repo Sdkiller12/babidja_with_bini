@@ -29,8 +29,14 @@ export class TenantsController {
 
   @Roles(UserRole.TENANT_ADMIN, UserRole.TENANT_EMPLOYEE)
   @Get('bookings')
-  listBookings(@Param('tenantId') tenantId: string) {
-    return this.tenantsService.listBookings(tenantId);
+  listBookings(
+    @Param('tenantId') tenantId: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 10;
+    return this.tenantsService.listBookings(tenantId, pageNum, limitNum);
   }
 
   @Roles(UserRole.TENANT_ADMIN, UserRole.TENANT_EMPLOYEE)
@@ -76,5 +82,33 @@ export class TenantsController {
     @Body() dto: CatalogueItemDto,
   ) {
     return this.tenantsService.updateCatalogueItem(tenantId, itemId, dto);
+  }
+
+  @Roles(UserRole.TENANT_ADMIN)
+  @Get('employees')
+  listEmployees(
+    @Param('tenantId') tenantId: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 10;
+    return this.tenantsService.listEmployees(tenantId, pageNum, limitNum);
+  }
+
+  @Roles(UserRole.TENANT_ADMIN)
+  @Post('employees')
+  addEmployee(@Param('tenantId') tenantId: string, @Body() dto: import('./dto/employee.dto').CreateEmployeeDto) {
+    return this.tenantsService.addEmployee(tenantId, dto);
+  }
+
+  @Roles(UserRole.TENANT_ADMIN)
+  @Patch('employees/:employeeId')
+  updateEmployee(
+    @Param('tenantId') tenantId: string,
+    @Param('employeeId') employeeId: string,
+    @Body() dto: import('./dto/employee.dto').UpdateEmployeeDto,
+  ) {
+    return this.tenantsService.updateEmployee(tenantId, employeeId, dto);
   }
 }

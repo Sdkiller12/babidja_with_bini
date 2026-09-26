@@ -4,12 +4,6 @@ import { Bell, CheckCheck, Info, AlertCircle, ShoppingBag } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchMyBookings } from '@/lib/api/bookings';
 
-const NOTIF_ICON: Record<string, React.ElementType> = {
-  booking: ShoppingBag,
-  info: Info,
-  alert: AlertCircle,
-};
-
 /** Génère des notifications contextuelles à partir des vraies réservations du compte. */
 function buildNotifications(bookings: { id: string; status: string; bookingRef: string; startDate: string }[]) {
   const notifs: { id: string; icon: React.ElementType; color: string; title: string; body: string; date: string; read: boolean }[] = [];
@@ -53,11 +47,12 @@ function buildNotifications(bookings: { id: string; status: string; bookingRef: 
 }
 
 export default function Notifications() {
-  const { data: bookings = [], isLoading } = useQuery({
+  const { data: bookingsData, isLoading } = useQuery({
     queryKey: ['my-bookings'],
-    queryFn: fetchMyBookings,
+    queryFn: () => fetchMyBookings(),
   });
 
+  const bookings = bookingsData?.data || [];
   const notifications = buildNotifications(bookings as Parameters<typeof buildNotifications>[0]);
 
   const unread = notifications.filter((n) => !n.read).length;

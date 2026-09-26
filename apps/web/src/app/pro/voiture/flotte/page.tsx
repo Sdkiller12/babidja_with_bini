@@ -142,17 +142,17 @@ export default function CarFleet() {
       </div>
 
       {editingCar && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-md rounded-2xl bg-white shadow-xl my-8">
-            <div className="flex items-center justify-between border-b p-4">
-              <h2 className="text-lg font-bold text-gray-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm">
+          <div className="my-8 max-h-[90dvh] w-full min-w-0 max-w-md overflow-y-auto rounded-2xl bg-white shadow-xl">
+            <div className="sticky top-0 flex items-center justify-between gap-3 border-b bg-white p-4">
+              <h2 className="min-w-0 truncate text-lg font-bold text-gray-900">
                 {editingCar.id ? 'Modifier le véhicule' : 'Ajouter un véhicule'}
               </h2>
-              <button type="button" onClick={handleCloseModal} className="rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-900">
+              <button type="button" onClick={handleCloseModal} aria-label="Fermer" className="grid size-9 min-h-[44px] min-w-[44px] shrink-0 place-items-center rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-900">
                 <X className="size-5" />
               </button>
             </div>
-            <form onSubmit={handleSave} className="p-4 space-y-4 max-h-[80vh] overflow-y-auto">
+            <form onSubmit={handleSave} className="space-y-4 p-4">
               <div>
                 <label className="mb-1 block text-sm font-medium text-gray-700">Modèle du véhicule</label>
                 <Input 
@@ -162,7 +162,7 @@ export default function CarFleet() {
                   placeholder="Ex: Toyota Corolla"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">Prix par jour (FCFA)</label>
                   <Input 
@@ -187,7 +187,7 @@ export default function CarFleet() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">Transmission</label>
                   <select 

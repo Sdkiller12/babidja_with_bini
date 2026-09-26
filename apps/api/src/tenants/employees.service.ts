@@ -7,8 +7,21 @@ import { UpdateEmployeeDto } from './dto/update-employee.dto';
 export class EmployeesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  list(tenantId: string) {
-    return this.prisma.tenantEmployee.findMany({ where: { tenantId }, include: { user: true } });
+  async list(tenantId: string, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.tenantEmployee.findMany({ 
+        where: { tenantId }, 
+        include: { user: true },
+        skip,
+        take: limit,
+      }),
+      this.prisma.tenantEmployee.count({ where: { tenantId } })
+    ]);
+    return {
+      data,
+      meta: { total, page, limit, lastPage: Math.ceil(total / limit) },
+    };
   }
 
   create(tenantId: string, userId: string, role: UserRole, permissions: string[] = []) {
